@@ -90,12 +90,60 @@ section {
     color: #fff;
     transition: ease 0.3s all;
 }
+.nav-icon{
+    display: block;
+    color: #000000;
+    padding: 1em 4em 1em 4em;
+    
+    font-size: 25px;
+}
+
+@media screen and (max-width: 590px) {
+    .nav-icon{
+        
+        padding: 1em ;
+        
+        font-size: 25px;
+    }
+
+}
+.hide{
+    display: none !important;
+}
+
+@media screen and (min-width: 749px) {
+    .medium-up--hide{
+        display: none !important;
+    }
+
+}
+
+@media screen and (max-width: 590px) {
+
+    .small--hide{
+        display: none !important;
+    }
+   
+    .mobile--menu{
+        display: flex;
+        flex-direction: column;
+        max-height: 80vh;
+        overflow: auto;
+        text-align: center;
+        
+     
+    }
+    .mobile--menu li{
+    text-align: center;
+    }
+}
+
 
 /* Header Styles */
 .page__header {
     background: #fff;
     position: fixed;
-    top: 0;
+    top: 0rem;
     width: 100%;
     z-index: 5;
 }

@@ -20,7 +20,7 @@
 
 
 
-let setTotalSection = 6;
+let setTotalSection = 4;
 /**
  * End Global Variables
  * Start Helper Functions
@@ -32,6 +32,8 @@ createSection();
 populateMenuItem();
 smoothScrollToSelectedSection();
 activeSectionOnView();
+openMobileMenu();
+closeMobileMenu();
 
 
 // run on DOM load
@@ -70,8 +72,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
 
 
-   // build the nav
-function populateMenuItem (){
+        // build the nav
+        function populateMenuItem (){
             const totalSections = document.querySelectorAll('section');
             const navBarLocation = document.querySelector('.navbar__menu #navbar__list');
             for (let i=1; i <= totalSections.length; i++){
@@ -94,7 +96,8 @@ function populateMenuItem (){
         // and selected menu item respectively
         function handleMenuClick(e){
                 e.preventDefault();
-                removeAllSelectedMenuItem()
+                slideUpMenuOnMenuItemClick();
+                removeAllSelectedMenuItem();
                 let selectedMenuItem = e.target;
                 selectedMenuItem.classList.add('active');
                 const getSectionId = selectedMenuItem.getAttribute('href');
@@ -118,6 +121,7 @@ function populateMenuItem (){
                 for (let section of sections){
                    
                     section.addEventListener('mouseenter', handleMenuMouseHover);
+                    section.addEventListener('touchstart', handleMenuMouseHover);
                 }
                 
             }
@@ -171,6 +175,49 @@ function populateMenuItem (){
         }
         
         
+        function handleOpenMenuClick(e){
+            const slideDowmMenu = document.querySelector('.mobile--menu');
+            const closeMenu = document.querySelector('.nav-icon-opened');
+            e.currentTarget.classList.add('hide');
+            closeMenu.classList.remove('hide');
+            slideDowmMenu.classList.remove('small--hide')
+            
+            
+        
+        }
+
+        function handleCloseMenuClick(e){
+            
+            const slideUpMenu = document.querySelector('.mobile--menu');
+            e.currentTarget.classList.add('hide');
+            const openMenu = document.querySelector('.nav-icon-closed');
+            openMenu.classList.remove('hide');
+            slideUpMenu.classList.add('small--hide')
+            
+        }
+
+        // open mobile menu
+        function openMobileMenu(){
+            const openMenu = document.querySelector('.nav-icon-closed');
+            openMenu.addEventListener('click', handleOpenMenuClick, false);
+           
+        }
+
+         //close mobile menu
+         function closeMobileMenu(){
+            const closeMenu = document.querySelector('.nav-icon-opened');
+            closeMenu.addEventListener('click', handleCloseMenuClick, false);
+           
+        }
+        //close mobile menu when a menu item is clicked
+        function slideUpMenuOnMenuItemClick(){
+            const openMenu = document.querySelector('.nav-icon-closed');
+            const menuItems= document.querySelector('.mobile--menu');
+            const closeMenu = document.querySelector('.nav-icon-opened');
+            menuItems.classList.add('small--hide');
+            closeMenu.classList.add('hide')
+            openMenu.classList.remove('hide')
+        }
 
 
 
