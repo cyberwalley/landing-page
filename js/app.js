@@ -31,9 +31,10 @@ let setTotalSection = 4;
 createSection();
 populateMenuItem();
 smoothScrollToSelectedSection();
-activeSectionOnView();
 openMobileMenu();
 closeMobileMenu();
+
+
 
 
 // run on DOM load
@@ -51,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
            
             const positionOnDom = document.querySelector('main');
                         let sectionBlock = `
-                    <section id="section${sectionNumber}" data-nav="Section ${sectionNumber}">
+                    <section id="section${sectionNumber}" data-nav="Section ${sectionNumber}" data-section="#section${sectionNumber}">
                     <div class="landing__container">
                     <h2>Section ${sectionNumber}</h2>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi fermentum metus faucibus lectus pharetra dapibus. Suspendisse potenti. Aenean aliquam elementum mi, ac euismod augue. Donec eget lacinia ex. Phasellus imperdiet porta orci eget mollis. Sed convallis sollicitudin mauris ac tincidunt. Donec bibendum, nulla eget bibendum consectetur, sem nisi aliquam leo, ut pulvinar quam nunc eu augue. Pellentesque maximus imperdiet elit a pharetra. Duis lectus mi, aliquam in mi quis, aliquam porttitor lacus. Morbi a tincidunt felis. Sed leo nunc, pharetra et elementum non, faucibus vitae elit. Integer nec libero venenatis libero ultricies molestie semper in tellus. Sed congue et odio sed euismod.</p>
@@ -77,20 +78,68 @@ document.addEventListener('DOMContentLoaded', function() {
             const totalSections = document.querySelectorAll('section');
             const navBarLocation = document.querySelector('.navbar__menu #navbar__list');
             for (let i=1; i <= totalSections.length; i++){
-                const menuListContent = `<li><a class="menu__link" href="#section${i}">Section ${i}</a></li>`;
+                const menuListContent = `<li><a class="menu__link" data-link="section ${i}" href="#section${i}">Section ${i}</a></li>`;
                 navBarLocation.insertAdjacentHTML('beforeend', menuListContent);
                 
             }
           
         }
 
+
+          //Determine if an element is in the viewport
+        var isInViewport = function (elem) {
+            var distance = elem.getBoundingClientRect();
+            return (
+                distance.top >= 0 &&
+                distance.left >= 0 &&
+                distance.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                distance.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
+        };
+
+               
+        //add your-active-class on section in view port
+                window.addEventListener('scroll', function (event) {
+                    const sections = document.querySelectorAll('[data-section]');
+            for (let section of sections ){
+                section.classList.remove('your-active-class')
+                if (isInViewport(section)) {
+                    section.classList.add('your-active-class')
+                    const sectionId = section.getAttribute('data-section')
+                    
+                    deactivateNavLinks();
+                    
+                    activateNavLinks(sectionId);
+                    
+                }
+            }
+                }, false);
+
+                
+
+                //add active class to menu item
+                function activateNavLinks(sectionId){
+                        const navLinks = document.querySelectorAll('[data-link]');
+                        for(let navLink of navLinks){
+                            if (sectionId === navLink.getAttribute('href')){
+                                
+                                navLink.classList.add('active');
+                                
+                            }
+
+                        }
+                }
+
+                //remove active class to menu item
+                function deactivateNavLinks(){
+                    const navLinks = document.querySelectorAll('[data-link]');
+                    for(let navLink of navLinks){
+                            navLink.classList.remove('active');
+                
+                    }
+            }
+
       
-         // handles mouse events add your-active-class on section in view
-         function handleMenuMouseHover(e){
-            removeAllSelecteds()
-            let actualSectionInView = e.currentTarget;
-            actualSectionInView.classList.add('your-active-class');
-        }
 
         // Handles click events and adds class 'your-active-class' and 'active' to section when near top of viewport
         // and selected menu item respectively
@@ -102,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 selectedMenuItem.classList.add('active');
                 const getSectionId = selectedMenuItem.getAttribute('href');
                 const sectionId = document.querySelector(getSectionId);
-
+               
                 // Scroll to anchor ID using scrollTO event
                 sectionId.scrollIntoView({ 
                     block: 'end', 
@@ -115,17 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 sectionId.classList.add('your-active-class');
            
         }
-            // add your-active-class on mouse events
-            function activeSectionOnView() {
-                const sections = document.querySelectorAll('section');
-                for (let section of sections){
-                   
-                    section.addEventListener('mouseenter', handleMenuMouseHover);
-                    section.addEventListener('touchstart', handleMenuMouseHover);
-                }
-                
-            }
-
+          
             // select first section item on page load
             function firstSectionSelectedOnLoad() {
                 const sections = document.querySelectorAll('section');
@@ -134,13 +173,11 @@ document.addEventListener('DOMContentLoaded', function() {
    
             }
 
-           
-    
+       
         // Scroll to section on link click
         function smoothScrollToSelectedSection(){
             const selectedMenus = document.querySelectorAll('.menu__link');
             for ( let selectedMenu of selectedMenus){
-               //selectedMenus[selectedMenus.length - 1].classList.add('active');
                 selectedMenu.addEventListener('click', handleMenuClick);
    
             }

@@ -101,7 +101,7 @@ section {
 @media screen and (max-width: 590px) {
     .nav-icon{
         
-        padding: 1em ;
+        padding: 0.5em;
         
         font-size: 25px;
     }
